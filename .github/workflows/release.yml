@@ -41,17 +41,10 @@ jobs:
       - name: Build (production)
         run: npm run build
 
-      - name: Install GitHub CLI
+      - name: Prepare release assets
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y gh
-        shell: bash
-
-      - name: Authenticate GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "$GITHUB_TOKEN" | gh auth login --with-token
+          mkdir -p release
+          zip -r release/assets.zip dist manifest.json styles.css || true
         shell: bash
 
       - name: Zip artifacts
@@ -77,103 +70,16 @@ jobs:
         with:
           name: release-artifacts
 
-      - name: Create Git tag and draft release
+      - name: Prepare assets for semantic-release
+        run: |
+          mkdir -p release
+          zip -r release/assets.zip dist manifest.json styles.css || true
+        shell: bash
+
+      - name: Run semantic-release (dry-run when not authorized)
         env:
-          SEMVER: ${{ github.event.inputs.semver }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # create a version bump locally and tag
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          NEW_VERSION=$(npm version ${SEMVER} -m "chore(release): %s [skip ci]")
-          echo "New version: $NEW_VERSION"
-          # create a draft release and upload the asset
-          gh release create "$NEW_VERSION" --title "$NEW_VERSION" --notes "Draft release created by workflow" --draft || true
-          gh release upload "$NEW_VERSION" release/assets.zip || true
+          npx semantic-release
         shell: bash
 name: Release
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  build-and-release:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build (production)
-        run: npm run build
-        env:
-          CI: true
-
-      - name: Zip assets
-        if: always()
-        run: |
-          if [ -d "assets" ]; then
-            zip -r assets.zip assets || true
-          fi
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
-          draft: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload main.js
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/main.js
-          asset_name: main.js
-          asset_content_type: application/javascript
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload manifest
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./manifest.json
-          asset_name: manifest.json
-          asset_content_type: application/json
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload styles
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./styles.css
-          asset_name: styles.css
-          asset_content_type: text/css
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload assets.zip
-        if: always()
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./assets.zip
-          asset_name: assets.zip
-          asset_content_type: application/zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
