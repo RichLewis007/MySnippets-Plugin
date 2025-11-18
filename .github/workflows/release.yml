@@ -25,11 +25,34 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Install deps
         run: npm ci
 
       - name: Build (production)
         run: npm run build
+
+      - name: Install GitHub CLI
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y gh
+        shell: bash
+
+      - name: Authenticate GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$GITHUB_TOKEN" | gh auth login --with-token
+        shell: bash
 
       - name: Zip artifacts
         run: |
@@ -47,6 +70,7 @@ jobs:
     name: Create Draft Release
     needs: build
     runs-on: ubuntu-latest
+    environment: release
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -56,16 +80,17 @@ jobs:
       - name: Create Git tag and draft release
         env:
           SEMVER: ${{ github.event.inputs.semver }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # create a version bump locally and tag
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           NEW_VERSION=$(npm version ${SEMVER} -m "chore(release): %s [skip ci]")
           echo "New version: $NEW_VERSION"
-          gh release create "$NEW_VERSION" --title "$NEW_VERSION" --notes "Draft release created by workflow" --draft --generate-notes || true
+          # create a draft release and upload the asset
+          gh release create "$NEW_VERSION" --title "$NEW_VERSION" --notes "Draft release created by workflow" --draft || true
+          gh release upload "$NEW_VERSION" release/assets.zip || true
         shell: bash
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 name: Release
 
 on:
