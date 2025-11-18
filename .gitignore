@@ -1,19 +1,55 @@
-# Intellij
+# Local-only files
+docs/
+
+# Operating system
+.DS_Store
+
+# IDEs / editors
 *.iml
-.idea
+.idea/
+.vscode/
 
-# npm
-node_modules
-package-lock.json
+# Node
 
-# build
-main.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.*
+
+.# Build outputs & caches
+# (dist is committed for releases; keep build/ and maps ignored)
+build/
 *.js.map
+.rpt2_cache/
+.rollup.cache
+.cache/
+*.tsbuildinfo
 
-# obsidian
+# TypeScript / transpiler
+*.d.ts
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Packaging
+*.tgz
+*.zip
+
+# Release artifacts (ignore locally-built release folders)
+release/
+releases/
+
+# Logs
+*.log
+
+# Obsidian-specific
 data.json
 
-# history
+# History / misc
 .history
-*.DS_Store
-.DS_Store
+
