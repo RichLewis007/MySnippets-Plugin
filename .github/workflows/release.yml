@@ -1,3 +1,71 @@
+name: Release (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      semver:
+        description: 'Version bump type (patch, minor, major)'
+        required: true
+        default: 'patch'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build (production)
+        run: npm run build
+
+      - name: Zip artifacts
+        run: |
+          mkdir -p release
+          zip -r release/assets.zip dist manifest.json styles.css || true
+        shell: bash
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          path: release
+
+  create_release:
+    name: Create Draft Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: release-artifacts
+
+      - name: Create Git tag and draft release
+        env:
+          SEMVER: ${{ github.event.inputs.semver }}
+        run: |
+          # create a version bump locally and tag
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          NEW_VERSION=$(npm version ${SEMVER} -m "chore(release): %s [skip ci]")
+          echo "New version: $NEW_VERSION"
+          gh release create "$NEW_VERSION" --title "$NEW_VERSION" --notes "Draft release created by workflow" --draft --generate-notes || true
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 name: Release
 
 on:
