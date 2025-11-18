@@ -6,7 +6,7 @@ const watch = process.argv.includes('--watch');
 async function run() {
   try {
     const options = {
-      entryPoints: ['src/plugin/main.ts'],
+      entryPoints: ['src/main.ts'],
       bundle: true,
       platform: 'node',
       outfile: 'dist/main.js',

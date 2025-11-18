@@ -1,9 +1,9 @@
-import { App, Menu, MenuItem } from "obsidian";
+import { App, Menu, MenuItem } from 'obsidian';
 
 export type EnhancedMenu = Menu & {
   dom: HTMLElement;
   items: EnhancedMenuItem[];
-  setUseNativeMenu: Function;
+  setUseNativeMenu: (use: boolean) => void;
 };
 
 export type EnhancedMenuItem = MenuItem & {
@@ -16,11 +16,11 @@ export type EnhancedMenuItem = MenuItem & {
 export type EnhancedApp = App & {
   customCss: {
     snippets: string[];
-    getSnippetsFolder: Function;
-    getSnippetPath: Function;
-    enabledSnippets: Function & { has: Function };
-    setCssEnabledStatus: Function;
-    requestLoadSnippets: Function;
+    getSnippetsFolder: () => string;
+    getSnippetPath: (name: string) => string;
+    enabledSnippets: { has: (name: string) => boolean };
+    setCssEnabledStatus: (name: string, enabled: boolean) => void;
+    requestLoadSnippets: () => void;
   };
-  openWithDefaultApp: Function;
+  openWithDefaultApp: (path: string) => void;
 };

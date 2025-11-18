@@ -1,4 +1,4 @@
-export const SNIPPET_VIEW_SIDE = ["right", "left"];
+export const SNIPPET_VIEW_SIDE = ['right', 'left'];
 
 export interface MySnippetsSettings {
   aestheticStyle: boolean;
@@ -10,8 +10,8 @@ export interface MySnippetsSettings {
 
 export const DEFAULT_SETTINGS: MySnippetsSettings = {
   aestheticStyle: false,
-  snippetViewPosition: "left",
+  snippetViewPosition: 'left',
   openSnippetFile: true,
-  stylingTemplate: "",
+  stylingTemplate: '',
   snippetEnabledStatus: false,
 };

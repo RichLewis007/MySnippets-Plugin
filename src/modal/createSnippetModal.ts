@@ -5,10 +5,10 @@ import {
   ButtonComponent,
   TextAreaComponent,
   Notice,
-} from "obsidian";
-import type MySnippetsPlugin from "../plugin/main";
-import { setAttributes } from "src/util/setAttributes";
-import { EnhancedApp } from "src/settings/type";
+} from 'obsidian';
+import type MySnippetsPlugin from 'src/main';
+import { setAttributes } from 'src/util/setAttributes';
+import { EnhancedApp } from 'src/settings/type';
 
 export default class CreateSnippetModal extends Modal {
   path: string;
@@ -23,66 +23,62 @@ export default class CreateSnippetModal extends Modal {
     this.onOpen = () => this.display(true);
   }
 
-  private async display(focus?: boolean) {
+  private async display() {
     const { contentEl } = this;
     const customCss = this.app.customCss;
 
     contentEl.empty();
-    contentEl.setAttribute("style", "margin-top: 0px");
+    contentEl.setAttribute('style', 'margin-top: 0px');
 
-    const title = document.createElement("h1");
-    title.setText("Create a CSS Snippet");
+    const title = document.createElement('h1');
+    title.setText('Create a CSS Snippet');
     contentEl.appendChild(title);
 
     const fileTitleSetting = new Setting(contentEl);
     const fileTitleValue = new TextComponent(fileTitleSetting.controlEl);
     fileTitleSetting
-      .setName("CSS Snippet Title")
-      .setDesc("Write the title for this CSS snippet file.");
+      .setName('CSS Snippet Title')
+      .setDesc('Write the title for this CSS snippet file.');
 
     const cssStylesSetting = new Setting(contentEl);
 
     // avoiding having to reference this specific modal - add style in code
-    cssStylesSetting.settingEl.setAttribute(
-      "style",
-      "display: grid; grid-template-columns: 1fr;"
-    );
+    cssStylesSetting.settingEl.setAttribute('style', 'display: grid; grid-template-columns: 1fr;');
     const cssStylesValue = new TextAreaComponent(cssStylesSetting.controlEl);
     setAttributes(cssStylesValue.inputEl, {
-      style: "margin-top: 12px; width: 100%;  height: 32vh;",
-      class: "ms-css-editor",
+      style: 'margin-top: 12px; width: 100%;  height: 32vh;',
+      class: 'ms-css-editor',
     });
     cssStylesSetting
-      .setName("CSS Snippet Styles")
-      .setDesc("Add in styling for this CSS snippet file.");
+      .setName('CSS Snippet Styles')
+      .setDesc('Add in styling for this CSS snippet file.');
     cssStylesValue.setValue(this.plugin.settings.stylingTemplate);
 
     const doAdd = async () => {
-      let fileName = fileTitleValue.getValue();
-      let fileContents = cssStylesValue.getValue();
-      let snippetPath = customCss.getSnippetPath(fileName);
+      const fileName = fileTitleValue.getValue();
+      const fileContents = cssStylesValue.getValue();
+      const snippetPath = customCss.getSnippetPath(fileName);
       if (fileName) {
         if (!customCss.snippets.includes(fileName)) {
           await this.app.vault.create(
             `${customCss.getSnippetsFolder()}/${fileName}.css`,
             fileContents
           );
-          console.log(`%c"${fileName}.css" has been created!`, "color: Violet");
+          console.log(`%c"${fileName}.css" has been created!`, 'color: Violet');
           if (this.plugin.settings.snippetEnabledStatus)
             customCss.setCssEnabledStatus(fileName, true);
 
-          if (this.plugin.settings.openSnippetFile)
-            this.app.openWithDefaultApp(snippetPath);
+          if (this.plugin.settings.openSnippetFile) this.app.openWithDefaultApp(snippetPath);
 
           customCss.requestLoadSnippets();
           this.close();
         } else new Notice(`"${fileName}.css" already exists.`);
-      } else new Notice("Missing name for file");
+      } else new Notice('Missing name for file');
     };
     const saveButton = new ButtonComponent(contentEl)
-      .setButtonText("Create Snippet")
+      .setButtonText('Create Snippet')
       .onClick(doAdd);
-    saveButton.buttonEl.addClass("wg-button");
+    saveButton.buttonEl.addClass('wg-button');
     fileTitleValue.inputEl.focus();
   }
 

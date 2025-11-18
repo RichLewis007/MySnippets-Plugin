@@ -5,16 +5,19 @@ All notable changes to this repository are documented in this file.
 ## Unreleased - 2025-11-18
 
 ### Added
+
 - `.github/copilot-instructions.md` — concise, project-specific guidance for AI coding agents (architecture, key files, build commands, patterns, and examples).
 - `CONTRIBUTING.md` — short developer guide covering lockfile policy, build commands (`npm run dev`, `npm run build`), and local Obsidian testing steps.
 - `CHANGELOG.md` — this file (you are reading it).
 
 ### Changed
+
 - `.gitignore` — expanded ignores to include common Node/TypeScript/Rollup artifacts and editor configs:
   - Added: `.vscode/`, `.rollup.cache`, `.rpt2_cache/`, `dist/`, `build/`, `.cache/`, `*.tsbuildinfo`, `release/`, `releases/`, and others.
   - Removed `package-lock.json` from ignore so the lockfile can be committed (recommended for reproducible installs).
 
 ### Notes / Verification
+
 - Files added in this change-set:
   - `.github/copilot-instructions.md`
   - `CONTRIBUTING.md`

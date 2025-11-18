@@ -34,7 +34,6 @@ jobs:
             zip -r assets.zip assets || true
           fi
 
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -74,7 +73,7 @@ jobs:
           asset_content_type: text/css
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Upload assets.zip
         if: always()
         uses: actions/upload-release-asset@v1

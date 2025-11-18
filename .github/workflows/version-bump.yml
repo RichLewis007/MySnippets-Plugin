@@ -1,0 +1,35 @@
+name: Version bump
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    name: Bump package version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Install
+        run: npm ci
+      - name: Bump version (patch)
+        run: |
+          NEW_VERSION=$(npm version patch -m "chore(release): %s")
+          echo "New version: $NEW_VERSION"
+      - name: Push changes
+        run: |
+          git push origin --follow-tags
