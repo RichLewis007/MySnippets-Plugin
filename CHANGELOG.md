@@ -47,4 +47,3 @@ All notable changes to this repository are documented in this file.
   - Create a version tag via `npm version` using the selected `semver` input (`patch` by default).
   - Create a **draft** GitHub Release and attach the packaged artifacts. This prevents unexpected tags on every push.
 
-If you want automatic semantic-release based on conventional commits instead, I can add that as an optional future step.

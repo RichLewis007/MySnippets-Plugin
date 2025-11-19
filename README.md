@@ -1,4 +1,5 @@
 # MySnippets Plugin
+
 Created by Chetachi Ezikeuzor @chetachiezikeuzor
 Original repo: https://github.com/chetachiezikeuzor/MySnippets-Plugin
 
@@ -96,3 +97,47 @@ Created with ❤️ by Chetachi
 <br/>
 <a href="https://ko-fi.com/chetachi">
 <img src="https://raw.githubusercontent.com/chetachiezikeuzor/MySnippets-Plugin/master/assets/kofi_color.svg" height="50"></a>
+
+## Development & Release
+
+Development
+- Install dependencies: `npm install`
+- Lint: `npm run lint`
+- Build (dev watch): `npm run dev`
+- Build (production): `npm run build`
+
+Release (using `semantic-release`)
+- Dry-run locally: `npx semantic-release --dry-run` or `npm run release:dry`
+- Create a manual release from the Actions UI (Actions → `Release (manual)`), choose `semver` input (patch/minor/major) and run.
+- The release workflow builds the project, packages `dist`, `manifest.json`, and `styles.css` to `release/assets.zip`, then runs `semantic-release` which:
+  - analyzes commits using conventional commits,
+  - updates `CHANGELOG.md`,
+  - creates a git tag and pushes it,
+  - publishes a draft GitHub release with the packaged assets.
+
+Notes
+- The `release` job requires the `release` environment to be configured in repository Settings → Environments if you want manual approvals or reviewers.
+- CI fetches the full history (`fetch-depth: 0`) so release/tagging operations work reliably.
+- To run a full release in CI, ensure the Actions `GITHUB_TOKEN` has `contents: write` (default) and that the runner can push tags to the repo.
+
+## Development & Release
+
+Development
+- Install dependencies: `npm install`
+- Lint: `npm run lint`
+- Build (dev watch): `npm run dev`
+- Build (production): `npm run build`
+
+Release (using `semantic-release`)
+- Dry-run locally: `npx semantic-release --dry-run` or `npm run release:dry`
+- Create a manual release from the Actions UI (Actions → `Release (manual)`), choose `semver` input (patch/minor/major) and run.
+- The release workflow builds the project, packages `dist`, `manifest.json`, and `styles.css` to `release/assets.zip`, then runs `semantic-release` which:
+  - analyzes commits using conventional commits,
+  - updates `CHANGELOG.md`,
+  - creates a git tag and pushes it,
+  - publishes a draft GitHub release with the packaged assets.
+
+Notes
+- The `release` job requires the `release` environment to be configured in repository Settings → Environments if you want manual approvals or reviewers.
+- CI fetches the full history (`fetch-depth: 0`) so release/tagging operations work reliably.
+- To run a full release in CI, ensure the Actions `GITHUB_TOKEN` has `contents: write` (default) and that the runner can push tags to the repo.

@@ -13,7 +13,9 @@
     "build": "BUILD=production node esbuild.config.mjs",
     "zip-release": "bash scripts/release.sh",
     "lint": "eslint 'src/**/*.{ts,js}'",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "release": "semantic-release",
+    "release:dry": "semantic-release --dry-run"
   },
   "keywords": [],
   "author": "",
