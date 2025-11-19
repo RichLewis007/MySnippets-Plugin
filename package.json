@@ -8,6 +8,9 @@
     "url": "https://github.com/RichLewis007/MySnippets-Plugin"
   },
   "type": "module",
+  "engines": {
+    "node": ">=24.10.0"
+  },
   "scripts": {
     "dev": "node esbuild.config.mjs --watch",
     "build": "BUILD=production node esbuild.config.mjs",
@@ -21,6 +24,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^13.0.1",
     "@semantic-release/git": "^10.0.1",
@@ -28,17 +32,18 @@
     "@semantic-release/release-notes-generator": "^14.1.0",
     "@types/node": "^24.10.1",
     "@types/sortablejs": "^1.15.9",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
     "esbuild": "^0.27.0",
-    "eslint": "^8.50.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "obsidian": "^1.10.3",
-    "prettier": "^3.0.0",
+    "prettier": "^3.6.2",
     "semantic-release": "^25.0.2",
     "tslib": "^2.8.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0"
   },
   "dependencies": {
     "open": "^11.0.0",
