@@ -1,4 +1,6 @@
 # MySnippets Plugin
+Created by Chetachi Ezikeuzor @chetachiezikeuzor
+Original repo: https://github.com/chetachiezikeuzor/MySnippets-Plugin
 
 ![MySnippets-Plugin Downloads](https://img.shields.io/github/downloads/chetachiezikeuzor/MySnippets-Plugin/total.svg)
 ![MySnippets-Plugin Releases](https://img.shields.io/github/v/release/chetachiezikeuzor/MySnippets-Plugin)
